@@ -4,6 +4,7 @@
 #include "bot.hpp"
 
 #include <vector>
+#include <unordered_map>
 
 class DfsSolver {
 private:
@@ -11,6 +12,7 @@ private:
     std::vector<State> stack;
     std::vector<State> best_stack;
     std::vector<std::vector<bool>> visited;
+    std::unordered_map<char, int> freq;
 
     void dfs_single(State u);
 

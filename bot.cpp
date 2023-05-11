@@ -65,10 +65,12 @@ void response() {
     std::vector<Pos> ans(size);
     for (auto& [x, y] : ans) ifs >> x >> y;
 
-    if (g::turn >= ans.size()) {
+    int next = (g::turn - 1) % g::period + 1;
+
+    if (next >= ans.size()) {
         ofs << "-2\n";
     } else {
-        g::cur = ans[g::turn];
+        g::cur = ans[next];
         ofs << g::cur.x << ' ' << g::cur.y << '\n';
     }
 }

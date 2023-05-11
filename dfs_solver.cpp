@@ -1,6 +1,7 @@
 #include "dfs_solver.hpp"
 
 #include <algorithm>
+#include <cctype>
 
 void DfsSolver::save_state() {
     std::ofstream ofs(g::state_file.data());
@@ -20,7 +21,6 @@ void DfsSolver::find_path() {
         }
     }
 
-    std::cout << best_stack.size() << '\n';
     save_state();
 }
 
@@ -37,10 +37,21 @@ void DfsSolver::dfs(Pos src) {
         visited_row.assign(g::width, false);
     }
 
+    freq.clear();
+
+    for (int i = 0; i < g::height; ++i) {
+        for (int j = 0; j < g::width; ++j) {
+            if (std::tolower(g::map[i][j]) == std::tolower(g::color)) {
+                visited[i][j] = true;
+            }
+            ++freq[std::toupper(g::map[i][j])];
+        }
+    }
+
     dist[g::off][src.x][src.y] = 1;
     stack.clear();
 
-    dfs_single({src, g::off, 1, 0});
+    dfs_single({src, g::off, g::turn + 1, 0});
 }
 
 void DfsSolver::dfs_single(State u) {
@@ -61,12 +72,26 @@ void DfsSolver::dfs_single(State u) {
         ord.insert(ord.begin(), dir);
     }
 
+    std::sort(ord.begin(), ord.end(), [&](int i, int j) {
+        char lhs =
+            in_bound(pos.x + g::dx[i], pos.y + g::dy[i])
+            ? g::map[pos.x + g::dx[i]][pos.y + g::dy[i]]
+            : '\0';
+
+        char rhs =
+            in_bound(pos.x + g::dx[j], pos.y + g::dy[j])
+            ? g::map[pos.x + g::dx[j]][pos.y + g::dy[j]]
+            : '\0';
+
+        return freq[lhs] > freq[rhs];
+    });
+
     for (int i : ord) {
         int x = pos.x + g::dx[i];
         int y = pos.y + g::dy[i];
 
         if (!in_bound(x, y)) continue;
-        if (g::map[x][y] == '#') continue;
+        if (g::map[x][y] == '#' || std::islower(g::map[x][y])) continue;
         if (visited[x][y]) continue;
 
         if (clayer > layer[x][y]) {

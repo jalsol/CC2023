@@ -14,4 +14,11 @@ int main() {
     }
 
     response();
+
+    if (g::turn > 0 && g::turn % g::period == 0) {
+        build_layer();
+        DfsSolver solver;
+        solver.dfs(g::cur);
+        solver.save_state();
+    }
 }
