@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+main
+.vscode
+STATE.DAT
+MAP.INP
+MOVE.OUT
