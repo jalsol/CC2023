@@ -1,5 +1,8 @@
 #include "bot.hpp"
 
+#include <algorithm>
+#include <cctype>
+
 void read_inputs() {
     std::ifstream ifs(g::input_file.data());
     ifs >> g::height >> g::width >> g::period >> g::turn;
@@ -68,9 +71,34 @@ void response() {
     int next = (g::turn - 1) % g::period + 1;
 
     if (next >= ans.size()) {
-        ofs << "-2\n";
+        out_of_path();
     } else {
         g::cur = ans[next];
-        ofs << g::cur.x << ' ' << g::cur.y << '\n';
+    }
+
+    ofs << g::cur.x << ' ' << g::cur.y << '\n';
+}
+
+void out_of_path() {
+    std::array ord{0, 1, 2, 3};
+    std::random_shuffle(ord.begin(), ord.end());
+
+    for (int i : ord) {
+        int x = g::cur.x + g::dx[i];
+        int y = g::cur.y + g::dy[i];
+
+        if (!in_bound(x, y)) continue;
+        if (g::map[x][y] == '#' || std::islower(g::map[x][y])) continue;
+
+        if (layer[g::cur.x][g::cur.y] > layer[x][y]) {
+            continue;
+        }
+
+        if ((g::turn + 1) % g::period == 0 && layer[x][y] <= ((g::turn + 1) / g::period) - 1) {
+            continue;
+        }
+
+        g::cur = {x, y};
+        break;
     }
 }

@@ -52,5 +52,6 @@ void read_inputs();
 void build_layer();
 bool in_bound(int x, int y);
 void response();
+void out_of_path();
 
 #endif // BOT_HPP
