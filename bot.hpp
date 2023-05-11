@@ -15,11 +15,17 @@ struct State {
     Pos pos;
     int dir;
     int step;
+    int layer;
 
     bool operator<(const State& other) const {
+        if (layer != other.layer)
+            return layer > other.layer;
         return step < other.step;
     }
 };
+
+using DistCache = std::array<std::vector<std::vector<int>>, 5>;
+using TraceCache = std::array<std::vector<std::vector<State>>, 4>;
 
 namespace g {
 
@@ -40,13 +46,9 @@ inline std::vector<std::vector<char>> map;
 } // namespace g
 
 inline std::vector<std::vector<int>> layer;
-inline std::array<std::vector<std::vector<int>>, 5> dist;
-inline std::array<std::vector<std::vector<State>>, 4> trace;
 
 void read_inputs();
 void build_layer();
-void save_state();
-void bfs();
 bool in_bound(int x, int y);
 
 #endif // BOT_HPP

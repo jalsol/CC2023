@@ -1,12 +1,12 @@
 #include "bot.hpp"
+#include "dfs_solver.hpp"
 
 int main() {
     read_inputs();
-    std::cout << "Running...\n";
 
     // TODO: only build once in the beginning
     build_layer();
-    bfs();
 
-    save_state();
+    DfsSolver solver;
+    solver.find_path();
 }
