@@ -12,11 +12,11 @@ private:
     std::vector<State> best_stack;
     std::vector<std::vector<bool>> visited;
 
-    void dfs(Pos src);
     void dfs_single(State u);
-    void save_state();
 
 public:
+    void save_state();
+    void dfs(Pos src);
     void find_path();
 };
 

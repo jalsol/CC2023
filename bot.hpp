@@ -41,6 +41,7 @@ constexpr int off = 4;
 inline int width, height;
 inline int turn, period;
 inline Pos cur;
+inline char color;
 inline std::vector<std::vector<char>> map;
 
 } // namespace g
@@ -50,5 +51,6 @@ inline std::vector<std::vector<int>> layer;
 void read_inputs();
 void build_layer();
 bool in_bound(int x, int y);
+void response();
 
 #endif // BOT_HPP

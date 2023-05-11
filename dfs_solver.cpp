@@ -1,9 +1,11 @@
 #include "dfs_solver.hpp"
 
-#include <ranges>
+#include <algorithm>
 
 void DfsSolver::save_state() {
     std::ofstream ofs(g::state_file.data());
+
+    ofs << best_stack.size() << '\n';
 
     for (const auto& [pos, dir, step, layer] : best_stack) {
         ofs << pos.x << ' ' << pos.y << std::endl;
@@ -50,17 +52,16 @@ void DfsSolver::dfs_single(State u) {
 
     visited[pos.x][pos.y] = true;
 
-    if (step > g::period * (std::min(g::height, g::width) + 1) / 2) goto exit;
+    if (step > g::height * g::width) goto exit;
     if (step < dist[dir][pos.x][pos.y]) goto exit;
 
     if (dir != g::off) {
-        ord.erase(std::ranges::find(ord, dir));
+        ord.erase(std::find(ord.begin(), ord.end(), (dir + 2) % 4));
+        ord.erase(std::find(ord.begin(), ord.end(), dir));
         ord.insert(ord.begin(), dir);
     }
 
     for (int i : ord) {
-        if (dir == (i + 2) % 4) continue;
-
         int x = pos.x + g::dx[i];
         int y = pos.y + g::dy[i];
 
@@ -70,7 +71,9 @@ void DfsSolver::dfs_single(State u) {
 
         if (clayer > layer[x][y]) {
             continue;
-        } else if ((step + 1) % g::period == 0 && clayer >= layer[x][y]) {
+        }
+
+        if (step % g::period == 0 && layer[x][y] <= (step / g::period) - 1) {
             continue;
         }
 
@@ -82,8 +85,10 @@ void DfsSolver::dfs_single(State u) {
     }
 
 exit:
-    if (travelled) {
+    if (!travelled) {
         if (best_stack.size() < stack.size()) {
+            best_stack = stack;
+        } else if (best_stack.size() == stack.size() && rand() % 2) {
             best_stack = stack;
         }
     }
