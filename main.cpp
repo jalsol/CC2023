@@ -1,9 +1,12 @@
 #include "bot.hpp"
 
 int main() {
-    // read_inputs();
-    g::width = 7;
-    g::height = 9;
+    read_inputs();
+    std::cout << "Running...\n";
+
+    // TODO: only build once in the beginning
     build_layer();
+    bfs();
+
     save_state();
 }
