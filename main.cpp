@@ -5,6 +5,7 @@
 #include <ctime>
 
 int main() {
+    std::srand(std::time(nullptr));
     read_inputs();
 
     if (g::turn == 0) {

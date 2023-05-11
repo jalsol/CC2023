@@ -113,7 +113,7 @@ exit:
     if (!travelled) {
         if (best_stack.size() < stack.size()) {
             best_stack = stack;
-        } else if (best_stack.size() == stack.size() && rand() % 2) {
+        } else if (best_stack.size() == stack.size() && std::rand() % 2) {
             best_stack = stack;
         }
     }
